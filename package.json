@@ -52,7 +52,6 @@
     "typecheck": "tsc --noEmit",
     "publish": "npm publish",
     "verify": "./scripts/check.sh",
-    "prepare": "./scripts/install-hooks.sh",
     "setup:hooks": "./scripts/install-hooks.sh",
     "all": "./scripts/build-all.sh"
   },
