@@ -57,6 +57,7 @@
     "all": "./scripts/build-all.sh"
   },
   "keywords": [
+    "simpill",
     "typescript",
     "middleware",
     "correlation",
@@ -74,9 +75,9 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@simpill/protocols.utils": "^1.0.0",
-    "@simpill/request-context.utils": "^1.0.0",
-    "@simpill/uuid.utils": "^1.0.0"
+    "@simpill/protocols.utils": "github:SkinnnyJay/protocols.utils",
+    "@simpill/request-context.utils": "github:SkinnnyJay/request-context.utils",
+    "@simpill/uuid.utils": "github:SkinnnyJay/uuid.utils"
   },
   "peerDependencies": {
     "typescript": ">=4.0.0"

@@ -53,6 +53,13 @@ else
   RELATIVE_PACKAGE_PATH="${RELATIVE_PACKAGE_PATH#/}"
   IS_STANDALONE=false
 fi
+# In a monorepo, skip hook installation only when run via 'prepare' (root npm install)
+# to avoid concurrent edits. Run 'npm run setup:hooks' in this package to install hooks.
+if [ "$IS_STANDALONE" = false ] && [ "${npm_lifecycle_event:-}" = "prepare" ]; then
+  echo "[$PACKAGE_NAME] Monorepo prepare: skipping hook installation (run 'npm run setup:hooks' in this package to install)."
+  exit 0
+fi
+
 
 # =============================================================================
 # Install Pre-Commit Hook
@@ -93,8 +100,9 @@ EOF
     if grep -q "# Package Pre-Commit Hook" "$PRE_COMMIT_HOOK"; then
       # Remove existing entry for this package if present
       if grep -q "$MARKER_START" "$PRE_COMMIT_HOOK"; then
-        awk "/$MARKER_START/,/$MARKER_END/{next}1" "$PRE_COMMIT_HOOK" > "$PRE_COMMIT_HOOK.tmp"
-        [ -f "$PRE_COMMIT_HOOK.tmp" ] && mv "$PRE_COMMIT_HOOK.tmp" "$PRE_COMMIT_HOOK"
+        TMP_PRE_COMMIT=$(mktemp) || exit 1
+        awk "/$MARKER_START/,/$MARKER_END/{next}1" "$PRE_COMMIT_HOOK" > "$TMP_PRE_COMMIT"
+        mv "$TMP_PRE_COMMIT" "$PRE_COMMIT_HOOK"
       fi
       
       # Remove trailing exit and add our content
@@ -191,8 +199,9 @@ EOF
     if grep -q "# Package Pre-Push Hook" "$PRE_PUSH_HOOK"; then
       # Remove existing entry for this package if present
       if grep -q "$MARKER_START" "$PRE_PUSH_HOOK"; then
-        awk "/$MARKER_START/,/$MARKER_END/{next}1" "$PRE_PUSH_HOOK" > "$PRE_PUSH_HOOK.tmp"
-        [ -f "$PRE_PUSH_HOOK.tmp" ] && mv "$PRE_PUSH_HOOK.tmp" "$PRE_PUSH_HOOK"
+        TMP_PRE_PUSH=$(mktemp) || exit 1
+        awk "/$MARKER_START/,/$MARKER_END/{next}1" "$PRE_PUSH_HOOK" > "$TMP_PRE_PUSH"
+        mv "$TMP_PRE_PUSH" "$PRE_PUSH_HOOK"
       fi
       
       # Remove trailing exit and add our content
