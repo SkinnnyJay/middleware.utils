@@ -58,9 +58,12 @@
   "keywords": [
     "simpill",
     "typescript",
+    "utilities",
+    "type-safe",
+    "cjs",
+    "tree-shakeable",
     "middleware",
-    "correlation",
-    "framework-agnostic"
+    "nodejs"
   ],
   "author": "@SkinnnyJay",
   "license": "ISC",
